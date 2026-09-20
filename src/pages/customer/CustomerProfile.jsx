@@ -1,11 +1,222 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function CustomerProfile() {
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // Mock Profile State
+  const [profile, setProfile] = useState({
+    name: 'Current User',
+    email: 'user@example.com',
+    phone: '(555) 123-4567',
+    address: '123 Luxury Lane, Downtown Area, City 10001',
+    role: 'Customer'
+  });
+
+  // Edit State
+  const [editForm, setEditForm] = useState({ ...profile });
+
+  const handleEditChange = (e) => {
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSave = () => {
+    setProfile(editForm);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditForm({ ...profile });
+    setIsEditing(false);
+  };
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
   return (
-    <div>
-      <h1 className="text-3xl font-serifHeading text-white font-bold mb-6">My Profile</h1>
-      <div className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
-        <p className="text-slate-400">Placeholder for managing account settings.</p>
+    <div className="space-y-8 relative font-sans max-w-6xl mx-auto">
+      {/* Ambient background */}
+      <div className="absolute top-0 right-1/4 w-[400px] h-[400px] radial-glow-sapphire rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] radial-glow-gold rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+
+      <div>
+        <h1 className="text-3xl font-serifHeading text-white font-bold mb-2">My Profile</h1>
+        <p className="text-slate-400">Manage your personal information and account settings.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+        
+        {/* Left Column: Profile Card & Account Settings */}
+        <div className="space-y-8">
+          
+          {/* Profile Card */}
+          <div className="luxury-card-border group">
+            <div className="glass-card rounded-[1.4rem] p-8 relative overflow-hidden flex flex-col items-center text-center">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#E5C07B] to-transparent opacity-50"></div>
+              
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#E5C07B] to-[#1D4ED8] p-[2px] shadow-lg mb-6 group-hover:scale-105 transition-transform">
+                <div className="w-full h-full rounded-full bg-[#090D18] flex items-center justify-center">
+                   <span className="text-3xl font-serifHeading text-[#E5C07B] font-bold">{profile.name.charAt(0)}</span>
+                </div>
+              </div>
+
+              <h2 className="text-xl font-serifHeading text-white font-bold">{profile.name}</h2>
+              <p className="text-[#E5C07B] text-xs uppercase tracking-widest font-bold mt-1 mb-4">{profile.role}</p>
+              
+              <div className="w-full space-y-3 mt-2 border-t border-white/10 pt-6 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Email</span>
+                  <span className="text-slate-200">{profile.email}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Phone</span>
+                  <span className="text-slate-200">{profile.phone}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Account Section */}
+          <div className="luxury-card-border">
+            <div className="glass-card rounded-[1.4rem] p-8">
+              <h3 className="text-lg font-serifHeading text-white font-bold mb-6 flex items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-500 mr-3"></span>
+                Account Settings
+              </h3>
+              
+              <div className="space-y-4">
+                <button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-center text-sm font-bold tracking-wider uppercase text-white hover:bg-white/10 transition-all">
+                  Change Password
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="w-full py-3 rounded-xl border border-red-500/30 bg-red-500/5 text-center text-sm font-bold tracking-wider uppercase text-red-500 hover:bg-red-500/10 transition-all"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Personal Information Form */}
+        <div className="lg:col-span-2 luxury-card-border h-fit">
+          <div className="glass-card rounded-[1.4rem] p-8 relative overflow-hidden">
+            <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+              <h2 className="text-xl font-serifHeading text-white font-bold flex items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] mr-3"></span>
+                Personal Information
+              </h2>
+              
+              {!isEditing && (
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs font-bold tracking-wider uppercase hover:bg-white/10 transition-colors"
+                >
+                  Edit Profile
+                </button>
+              )}
+            </div>
+
+            {isEditing ? (
+              <form className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Full Name</label>
+                    <input 
+                      type="text" 
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={editForm.email}
+                      onChange={handleEditChange}
+                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Phone Number</label>
+                    <input 
+                      type="tel" 
+                      name="phone"
+                      value={editForm.phone}
+                      onChange={handleEditChange}
+                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Primary Address</label>
+                    <input 
+                      type="text" 
+                      name="address"
+                      value={editForm.address}
+                      onChange={handleEditChange}
+                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4 border-t border-white/10">
+                  <button 
+                    type="button"
+                    onClick={handleSave}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-wider uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
+                  >
+                    Save Changes
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={handleCancel}
+                    className="px-6 py-3 rounded-xl border border-white/10 bg-transparent text-white text-sm font-bold tracking-wider uppercase hover:bg-white/5 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Full Name</p>
+                    <p className="text-white text-lg font-medium">{profile.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Email Address</p>
+                    <p className="text-white text-lg font-medium">{profile.email}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Phone Number</p>
+                    <p className="text-white text-lg font-medium">{profile.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Primary Address</p>
+                    <p className="text-white text-lg font-medium">{profile.address}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+          </div>
+        </div>
+
       </div>
     </div>
   );
