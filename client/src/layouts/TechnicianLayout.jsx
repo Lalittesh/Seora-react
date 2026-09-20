@@ -1,8 +1,16 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function TechnicianLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const navItems = [
     { name: 'Dashboard', path: '/technician' },
@@ -43,9 +51,9 @@ function TechnicianLayout() {
         </nav>
 
         <div className="pt-6 border-t border-white/10 mt-auto">
-          <Link to="/login" className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 transition-colors">
+          <button type="button" onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 transition-colors">
             Logout
-          </Link>
+          </button>
         </div>
       </aside>
 

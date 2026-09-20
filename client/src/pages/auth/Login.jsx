@@ -1,16 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Login() {
   const [role, setRole] = useState('customer');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { login, logout } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (role === 'customer') {
-      navigate('/customer');
-    } else {
-      navigate('/technician');
+    setError('');
+    setSubmitting(true);
+    try {
+      const data = await login(email, password);
+      if (data.role !== role) {
+        logout();
+        setError(`This account is registered as a ${data.role}. Please select the correct role.`);
+        setSubmitting(false);
+        return;
+      }
+      navigate(data.role === 'customer' ? '/customer' : '/technician');
+    } catch (err) {
+      setError(err.status === 401 ? 'Invalid email or password.' : err.message || 'Something went wrong.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -31,6 +48,10 @@ function Login() {
             <h2 className="text-2xl font-serifHeading text-white font-bold">Welcome Back</h2>
             <p className="text-slate-400 text-sm mt-2">Sign in to continue to your dashboard</p>
           </div>
+
+          {error && (
+            <p className="mb-4 text-sm text-red-400 text-center">{error}</p>
+          )}
           
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
@@ -38,6 +59,8 @@ function Login() {
               <input 
                 type="email" 
                 required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3.5 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
               />
@@ -51,6 +74,8 @@ function Login() {
               <input 
                 type="password" 
                 required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3.5 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
               />
@@ -85,10 +110,11 @@ function Login() {
             </div>
 
             <button 
-              type="submit" 
-              className="w-full py-4 mt-6 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.15em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
+              type="submit"
+              disabled={submitting}
+              className="w-full py-4 mt-6 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.15em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right disabled:opacity-60"
             >
-              Sign In
+              {submitting ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
 

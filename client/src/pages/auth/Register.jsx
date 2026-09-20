@@ -1,30 +1,62 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Register() {
   const [role, setRole] = useState('customer');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [techService, setTechService] = useState('');
+  const [techLocation, setTechLocation] = useState('');
+  const [techExperience, setTechExperience] = useState('');
+  const [techHourlyRate, setTechHourlyRate] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    if (role === 'customer') {
-      navigate('/customer');
-    } else {
-      navigate('/technician');
+    setError('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const data = await register({
+        name,
+        email,
+        phone,
+        password,
+        role,
+        technicianDetails: role === 'technician' ? {
+          service: techService,
+          location: techLocation,
+          experience: techExperience,
+          hourlyRate: techHourlyRate
+        } : null
+      });
+      navigate(data.role === 'customer' ? '/customer' : '/technician');
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#05070E] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Ambient Background Effects */}
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] radial-glow-sapphire rounded-full blur-3xl opacity-30 pointer-events-none"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] radial-glow-gold rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
-      {/* Increased max width for the register form because it has more fields */}
       <div className="luxury-card-border w-full max-w-lg z-10 relative my-8">
         <div className="glass-card rounded-[1.4rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
-          
-          {/* Top accent line */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#E5C07B] to-transparent opacity-50"></div>
 
           <div className="text-center mb-10">
@@ -32,6 +64,10 @@ function Register() {
             <h2 className="text-2xl font-serifHeading text-white font-bold">Create Account</h2>
             <p className="text-slate-400 text-sm mt-2">Join our network of premium professionals</p>
           </div>
+
+          {error && (
+            <p className="mb-4 text-sm text-red-400 text-center">{error}</p>
+          )}
           
           <form onSubmit={handleRegister} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -40,6 +76,8 @@ function Register() {
                 <input 
                   type="text" 
                   required 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                 />
@@ -50,6 +88,8 @@ function Register() {
                 <input 
                   type="tel" 
                   required 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   placeholder="(555) 000-0000"
                   className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                 />
@@ -61,6 +101,8 @@ function Register() {
               <input 
                 type="email" 
                 required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@example.com"
                 className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
               />
@@ -72,6 +114,8 @@ function Register() {
                 <input 
                   type="password" 
                   required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                 />
@@ -82,6 +126,8 @@ function Register() {
                 <input 
                   type="password" 
                   required 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                 />
@@ -127,7 +173,12 @@ function Register() {
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Service</label>
                     <div className="relative">
-                      <select required className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all appearance-none">
+                      <select
+                        required
+                        value={techService}
+                        onChange={(e) => setTechService(e.target.value)}
+                        className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all appearance-none"
+                      >
                         <option value="" className="bg-[#090D18]">Select a service...</option>
                         <option value="plumber" className="bg-[#090D18]">Plumber</option>
                         <option value="electrician" className="bg-[#090D18]">Electrician</option>
@@ -145,6 +196,8 @@ function Register() {
                     <input 
                       type="text" 
                       required 
+                      value={techLocation}
+                      onChange={(e) => setTechLocation(e.target.value)}
                       placeholder="City or ZIP code"
                       className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                     />
@@ -158,6 +211,8 @@ function Register() {
                       type="number" 
                       min="0" 
                       required 
+                      value={techExperience}
+                      onChange={(e) => setTechExperience(e.target.value)}
                       placeholder="e.g. 5"
                       className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                     />
@@ -169,6 +224,8 @@ function Register() {
                       type="number" 
                       min="0" 
                       required 
+                      value={techHourlyRate}
+                      onChange={(e) => setTechHourlyRate(e.target.value)}
                       placeholder="e.g. 50"
                       className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600" 
                     />
@@ -178,10 +235,11 @@ function Register() {
             )}
 
             <button 
-              type="submit" 
-              className="w-full py-4 mt-8 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.15em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
+              type="submit"
+              disabled={submitting}
+              className="w-full py-4 mt-8 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.15em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right disabled:opacity-60"
             >
-              Create Account
+              {submitting ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 

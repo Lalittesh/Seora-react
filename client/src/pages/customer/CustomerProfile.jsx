@@ -1,46 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { authApi } from '../../services/api';
 
 function CustomerProfile() {
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  
-  // Mock Profile State
-  const [profile, setProfile] = useState({
-    name: 'Current User',
-    email: 'user@example.com',
-    phone: '(555) 123-4567',
-    address: '123 Luxury Lane, Downtown Area, City 10001',
-    role: 'Customer'
-  });
+  const { logout } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [profile, setProfile] = useState(null);
 
-  // Edit State
-  const [editForm, setEditForm] = useState({ ...profile });
-
-  const handleEditChange = (e) => {
-    setEditForm({
-      ...editForm,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSave = () => {
-    setProfile(editForm);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditForm({ ...profile });
-    setIsEditing(false);
-  };
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const me = await authApi.me();
+        setProfile({
+          name: me.name,
+          email: me.email,
+          phone: me.phone,
+          role: me.role === 'customer' ? 'Customer' : me.role
+        });
+      } catch {
+        setError('Unable to load data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const handleLogout = () => {
+    logout();
     navigate('/login');
   };
 
+  if (loading) {
+    return <p className="text-slate-400">Loading...</p>;
+  }
+
+  if (error || !profile) {
+    return <p className="text-slate-400">{error || 'Something went wrong.'}</p>;
+  }
+
   return (
     <div className="space-y-8 relative font-sans max-w-6xl mx-auto">
-      {/* Ambient background */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] radial-glow-sapphire rounded-full blur-3xl opacity-20 pointer-events-none"></div>
       <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] radial-glow-gold rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
@@ -50,11 +55,7 @@ function CustomerProfile() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
-        
-        {/* Left Column: Profile Card & Account Settings */}
         <div className="space-y-8">
-          
-          {/* Profile Card */}
           <div className="luxury-card-border group">
             <div className="glass-card rounded-[1.4rem] p-8 relative overflow-hidden flex flex-col items-center text-center">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#E5C07B] to-transparent opacity-50"></div>
@@ -81,7 +82,6 @@ function CustomerProfile() {
             </div>
           </div>
 
-          {/* Account Section */}
           <div className="luxury-card-border">
             <div className="glass-card rounded-[1.4rem] p-8">
               <h3 className="text-lg font-serifHeading text-white font-bold mb-6 flex items-center">
@@ -104,7 +104,6 @@ function CustomerProfile() {
           </div>
         </div>
 
-        {/* Right Column: Personal Information Form */}
         <div className="lg:col-span-2 luxury-card-border h-fit">
           <div className="glass-card rounded-[1.4rem] p-8 relative overflow-hidden">
             <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
@@ -112,111 +111,29 @@ function CustomerProfile() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] mr-3"></span>
                 Personal Information
               </h2>
-              
-              {!isEditing && (
-                <button 
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 rounded-lg bg-[#E5C07B]/5 border border-[#E5C07B]/30 text-[#E5C07B] text-xs font-bold tracking-wider uppercase hover:bg-[#E5C07B]/10 transition-colors"
-                >
-                  Edit Profile
-                </button>
-              )}
             </div>
 
-            {isEditing ? (
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Full Name</label>
-                    <input 
-                      type="text" 
-                      name="name"
-                      value={editForm.name}
-                      onChange={handleEditChange}
-                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
-                    <input 
-                      type="email" 
-                      name="email"
-                      value={editForm.email}
-                      onChange={handleEditChange}
-                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
-                    />
-                  </div>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Full Name</p>
+                  <p className="text-white text-lg font-medium">{profile.name}</p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phone"
-                      value={editForm.phone}
-                      onChange={handleEditChange}
-                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Primary Address</label>
-                    <input 
-                      type="text" 
-                      name="address"
-                      value={editForm.address}
-                      onChange={handleEditChange}
-                      className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all" 
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-4 pt-4 border-t border-white/10">
-                  <button 
-                    type="button"
-                    onClick={handleSave}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-wider uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
-                  >
-                    Save Changes
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={handleCancel}
-                    className="px-6 py-3 rounded-xl border border-white/10 bg-transparent text-white text-sm font-bold tracking-wider uppercase hover:bg-white/5 transition-all"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Full Name</p>
-                    <p className="text-white text-lg font-medium">{profile.name}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Email Address</p>
-                    <p className="text-white text-lg font-medium">{profile.email}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Phone Number</p>
-                    <p className="text-white text-lg font-medium">{profile.phone}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Primary Address</p>
-                    <p className="text-white text-lg font-medium">{profile.address}</p>
-                  </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Email Address</p>
+                  <p className="text-white text-lg font-medium">{profile.email}</p>
                 </div>
               </div>
-            )}
-            
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Phone Number</p>
+                  <p className="text-white text-lg font-medium">{profile.phone}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );
