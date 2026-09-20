@@ -90,7 +90,7 @@ function CustomerProfile() {
               </h3>
               
               <div className="space-y-4">
-                <button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-center text-sm font-bold tracking-wider uppercase text-white hover:bg-white/10 transition-all">
+                <button className="w-full py-3 rounded-xl border border-[#E5C07B]/30 bg-[#E5C07B]/5 text-center text-sm font-bold tracking-wider uppercase text-[#E5C07B] hover:bg-[#E5C07B]/10 transition-all">
                   Change Password
                 </button>
                 <button 
@@ -116,7 +116,7 @@ function CustomerProfile() {
               {!isEditing && (
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs font-bold tracking-wider uppercase hover:bg-white/10 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[#E5C07B]/5 border border-[#E5C07B]/30 text-[#E5C07B] text-xs font-bold tracking-wider uppercase hover:bg-[#E5C07B]/10 transition-colors"
                 >
                   Edit Profile
                 </button>
