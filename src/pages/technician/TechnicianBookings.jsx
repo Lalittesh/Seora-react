@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 function TechnicianBookings() {
-  const [bookings, setBookings] = useState([
+  const [requests, setRequests] = useState([
     {
-      id: 'BK-1050',
+      id: 'REQ-1050',
       customer: 'Sarah Jenkins',
       phone: '(555) 019-2834',
       service: 'Plumber',
@@ -15,19 +15,19 @@ function TechnicianBookings() {
       status: 'Pending'
     },
     {
-      id: 'BK-1049',
+      id: 'REQ-1051',
       customer: 'David Thompson',
       phone: '(555) 912-3847',
       service: 'Plumber',
-      date: '2026-10-24',
+      date: '2026-10-26',
       time: '01:00 PM',
       hours: 4,
       address: '789 Luxury Blvd, West End',
       amount: 340,
-      status: 'Confirmed'
+      status: 'Pending'
     },
     {
-      id: 'BK-1048',
+      id: 'REQ-1048',
       customer: 'Alice Brown',
       phone: '(555) 123-4567',
       service: 'Plumber',
@@ -36,10 +36,10 @@ function TechnicianBookings() {
       hours: 2,
       address: '123 Luxury Lane, Downtown Area',
       amount: 185,
-      status: 'In Progress'
+      status: 'Accepted'
     },
     {
-      id: 'BK-1040',
+      id: 'REQ-1040',
       customer: 'Marcus King',
       phone: '(555) 888-9999',
       service: 'Plumber',
@@ -48,128 +48,156 @@ function TechnicianBookings() {
       hours: 3,
       address: '12 Prestige Circle, Eastside',
       amount: 255,
-      status: 'Completed'
+      status: 'Rejected'
     }
   ]);
 
-  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [activeTab, setActiveTab] = useState('Pending');
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  const filteredRequests = requests.filter(req => req.status === activeTab);
 
   const getStatusColor = (status) => {
     switch(status) {
       case 'Pending': return 'bg-[#E5C07B]/10 text-[#E5C07B] border-[#E5C07B]/20';
-      case 'Confirmed': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-      case 'In Progress': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-      case 'Completed': return 'bg-[#059669]/10 text-[#059669] border-[#059669]/20';
-      case 'Cancelled': return 'bg-red-500/10 text-red-400 border-red-500/20';
+      case 'Accepted': return 'bg-[#059669]/10 text-[#059669] border-[#059669]/20';
+      case 'Rejected': return 'bg-red-500/10 text-red-400 border-red-500/20';
       default: return 'bg-white/10 text-slate-300 border-white/20';
     }
   };
 
-  const updateBookingStatus = (id, newStatus) => {
-    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
+  const updateStatus = (id, newStatus) => {
+    setRequests(prev => prev.map(req => req.id === id ? { ...req, status: newStatus } : req));
   };
 
   return (
-    <div className="space-y-12 relative font-sans max-w-7xl mx-auto pb-10">
+    <div className="space-y-8 relative font-sans max-w-7xl mx-auto pb-10">
       {/* Ambient background */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] radial-glow-sapphire rounded-full blur-3xl opacity-20 pointer-events-none"></div>
       <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] radial-glow-gold rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
       <div>
-        <h1 className="text-3xl font-serifHeading text-white font-bold mb-2">My Bookings</h1>
-        <p className="text-slate-400">Manage incoming requests and your scheduled jobs.</p>
+        <h1 className="text-3xl font-serifHeading text-white font-bold mb-2">Booking Requests</h1>
+        <p className="text-slate-400">Review and accept incoming customer service requests.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
-        {bookings.map((booking) => (
-          <div key={booking.id} className="luxury-card-border group">
-            <div className="glass-card rounded-[1.4rem] p-6 transition-all group-hover:bg-white/[0.04] h-full flex flex-col">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Booking #{booking.id}</div>
-                  <h3 className="text-lg font-serifHeading text-white font-bold">{booking.customer}</h3>
-                  <p className="text-sm text-[#E5C07B]">{booking.service}</p>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(booking.status)}`}>
-                  {booking.status}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mt-4 mb-6 text-sm flex-grow">
-                <div>
-                  <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Date & Time</div>
-                  <div className="text-slate-300">{booking.date}</div>
-                  <div className="text-slate-400 text-xs">{booking.time} ({booking.hours} hrs)</div>
-                </div>
-                <div>
-                  <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Total</div>
-                  <div className="text-white font-bold">${booking.amount}</div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-auto space-y-3 pt-4 border-t border-white/5">
-                {booking.status === 'Pending' && (
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={() => updateBookingStatus(booking.id, 'Confirmed')}
-                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-[11px] font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
-                    >
-                      Accept
-                    </button>
-                    <button 
-                      onClick={() => updateBookingStatus(booking.id, 'Cancelled')}
-                      className="flex-1 py-2.5 rounded-xl border border-white/20 bg-transparent text-white text-[11px] font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-
-                {booking.status === 'Confirmed' && (
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={() => updateBookingStatus(booking.id, 'In Progress')}
-                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-[11px] font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
-                    >
-                      Start Job
-                    </button>
-                    <button 
-                      onClick={() => setSelectedBooking(booking)}
-                      className="flex-1 py-2.5 rounded-xl border border-white/20 bg-transparent text-white text-[11px] font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
-                    >
-                      Details
-                    </button>
-                  </div>
-                )}
-                
-                {(booking.status === 'In Progress' || booking.status === 'Completed' || booking.status === 'Cancelled') && (
-                  <button 
-                    onClick={() => setSelectedBooking(booking)}
-                    className="w-full py-2.5 rounded-xl border border-[#E5C07B]/30 bg-[#E5C07B]/5 text-[#E5C07B] text-[11px] font-bold tracking-[0.1em] uppercase hover:bg-[#E5C07B]/10 transition-all"
-                  >
-                    View Details
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-3 relative z-10 border-b border-white/10 pb-4">
+        {['Pending', 'Accepted', 'Rejected'].map(tab => (
+          <button 
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all ${
+              activeTab === tab 
+                ? 'bg-[#E5C07B] text-[#090D18]' 
+                : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            {tab === 'Pending' ? 'New Requests' : tab}
+            {tab === 'Pending' && <span className="ml-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-[10px]">{requests.filter(r => r.status === 'Pending').length}</span>}
+          </button>
         ))}
       </div>
 
-      {/* Details Modal */}
-      {selectedBooking && (
+      {/* Inbox Style Layout */}
+      <div className="space-y-4 relative z-10">
+        {filteredRequests.length > 0 ? filteredRequests.map((req) => (
+          <div key={req.id} className="luxury-card-border group">
+            <div className="glass-card rounded-[1.4rem] p-6 transition-all group-hover:bg-white/[0.04] flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              
+              {/* Request Info */}
+              <div className="flex-grow grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="md:col-span-1">
+                  <div className="text-[10px] uppercase tracking-widest text-[#E5C07B] mb-1 font-bold">{req.service}</div>
+                  <h3 className="text-lg font-serifHeading text-white font-bold">{req.customer}</h3>
+                  <p className="text-xs text-slate-400 mt-1">{req.phone}</p>
+                </div>
+
+                <div className="md:col-span-1 border-l border-white/5 pl-6">
+                  <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Requested For</div>
+                  <div className="text-slate-200 text-sm">{req.date}</div>
+                  <div className="text-slate-400 text-xs mt-0.5">{req.time} ({req.hours} hrs)</div>
+                </div>
+
+                <div className="md:col-span-1 border-l border-white/5 pl-6">
+                  <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Location</div>
+                  <div className="text-slate-200 text-sm truncate pr-4">{req.address}</div>
+                </div>
+
+                <div className="md:col-span-1 border-l border-white/5 pl-6">
+                  <div className="text-slate-500 text-[10px] uppercase tracking-wider mb-1">Est. Value</div>
+                  <div className="text-xl font-display text-white font-bold">${req.amount}</div>
+                </div>
+              </div>
+
+              {/* Actions Column */}
+              <div className="shrink-0 flex flex-col gap-3 min-w-[200px] border-t border-white/5 pt-4 lg:border-t-0 lg:pt-0 lg:border-l lg:pl-6">
+                {req.status === 'Pending' && (
+                  <>
+                    <button 
+                      onClick={() => updateStatus(req.id, 'Accepted')}
+                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-xs font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
+                    >
+                      Accept Booking
+                    </button>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setSelectedRequest(req)}
+                        className="flex-1 py-2.5 rounded-xl border border-white/20 bg-transparent text-white text-[10px] font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
+                      >
+                        View Request
+                      </button>
+                      <button 
+                        onClick={() => updateStatus(req.id, 'Rejected')}
+                        className="flex-1 py-2.5 rounded-xl border border-white/20 bg-transparent text-white text-[10px] font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {req.status === 'Accepted' && (
+                  <div className="text-center bg-[#059669]/10 border border-[#059669]/20 rounded-xl py-4">
+                    <span className="text-[#059669] text-xs font-bold uppercase tracking-wider">Moved to Jobs</span>
+                  </div>
+                )}
+
+                {req.status === 'Rejected' && (
+                  <div className="text-center bg-red-500/10 border border-red-500/20 rounded-xl py-4">
+                    <span className="text-red-500 text-xs font-bold uppercase tracking-wider">Request Rejected</span>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+        )) : (
+          <div className="luxury-card-border">
+            <div className="glass-card rounded-[1.4rem] p-16 text-center">
+              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl opacity-50">📥</span>
+              </div>
+              <h3 className="text-xl font-serifHeading text-white font-bold mb-2">No {activeTab.toLowerCase()} requests</h3>
+              <p className="text-slate-400">You're all caught up with your inbox.</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* View Request Modal */}
+      {selectedRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#05070E]/80 backdrop-blur-sm" onClick={() => setSelectedBooking(null)}></div>
+          <div className="absolute inset-0 bg-[#05070E]/80 backdrop-blur-sm" onClick={() => setSelectedRequest(null)}></div>
           
           <div className="luxury-card-border w-full max-w-lg z-10 relative">
             <div className="glass-card rounded-[1.4rem] p-8 md:p-10 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#E5C07B] to-transparent opacity-50"></div>
               
               <div className="flex justify-between items-start mb-6">
-                <h2 className="text-2xl font-serifHeading text-white font-bold">Booking Details</h2>
+                <h2 className="text-2xl font-serifHeading text-white font-bold">Request Details</h2>
                 <button 
-                  onClick={() => setSelectedBooking(null)}
+                  onClick={() => setSelectedRequest(null)}
                   className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   ✕
@@ -179,43 +207,60 @@ function TechnicianBookings() {
               <div className="space-y-6">
                 <div className="flex justify-between items-center pb-6 border-b border-white/10">
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Booking ID</p>
-                    <p className="text-white font-bold tracking-wider">{selectedBooking.id}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Request ID</p>
+                    <p className="text-white font-bold tracking-wider">{selectedRequest.id}</p>
                   </div>
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(selectedBooking.status)}`}>
-                    {selectedBooking.status}
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(selectedRequest.status)}`}>
+                    {selectedRequest.status}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 pb-6 border-b border-white/10">
                   <div>
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Customer</p>
-                    <p className="text-white font-bold">{selectedBooking.customer}</p>
-                    <p className="text-slate-400 text-xs mt-1">{selectedBooking.phone}</p>
+                    <p className="text-white font-bold">{selectedRequest.customer}</p>
+                    <p className="text-slate-400 text-xs mt-1">{selectedRequest.phone}</p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Service</p>
-                    <p className="text-[#E5C07B] font-bold">{selectedBooking.service}</p>
+                    <p className="text-[#E5C07B] font-bold">{selectedRequest.service}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Date</p>
-                    <p className="text-slate-200">{selectedBooking.date}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Requested Date</p>
+                    <p className="text-slate-200">{selectedRequest.date}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Time</p>
-                    <p className="text-slate-200">{selectedBooking.time} ({selectedBooking.hours} hrs)</p>
+                    <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Requested Time</p>
+                    <p className="text-slate-200">{selectedRequest.time} ({selectedRequest.hours} hrs)</p>
                   </div>
                 </div>
 
                 <div className="pb-6 border-b border-white/10">
                   <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Service Address</p>
-                  <p className="text-slate-200">{selectedBooking.address}</p>
+                  <p className="text-slate-200">{selectedRequest.address}</p>
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-slate-300 font-bold uppercase tracking-wider text-sm">Est. Payout</span>
-                  <span className="text-3xl font-display gold-gradient-text font-bold">${selectedBooking.amount}</span>
+                  <span className="text-slate-300 font-bold uppercase tracking-wider text-sm">Est. Value</span>
+                  <span className="text-3xl font-display gold-gradient-text font-bold">${selectedRequest.amount}</span>
                 </div>
+
+                {selectedRequest.status === 'Pending' && (
+                  <div className="grid grid-cols-2 gap-4 pt-6">
+                    <button 
+                      onClick={() => { updateStatus(selectedRequest.id, 'Accepted'); setSelectedRequest(null); }}
+                      className="py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-xs font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
+                    >
+                      Accept
+                    </button>
+                    <button 
+                      onClick={() => { updateStatus(selectedRequest.id, 'Rejected'); setSelectedRequest(null); }}
+                      className="py-3 rounded-xl border border-white/20 bg-transparent text-white text-xs font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
