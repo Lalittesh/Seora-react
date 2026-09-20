@@ -3,19 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { technicianApi } from '../../services/api';
 
-const mapProfile = (tech) => ({
-  name: tech.user?.name || '',
-  email: tech.user?.email || '',
-  phone: tech.user?.phone || '',
-  role: 'Technician',
-  location: tech.user?.location || '',
-  service: tech.service?.name || 'Plumber',
-  experience: String(tech.experience ?? 0),
-  rate: String(tech.hourlyRate ?? 0),
-  rating: String(tech.rating ?? 0),
-  availability: tech.availability ? 'Available' : 'Busy'
-});
-
 function TechnicianProfile() {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -23,27 +10,38 @@ function TechnicianProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [saveError, setSaveError] = useState('');
-  const [saving, setSaving] = useState(false);
-
   const [profile, setProfile] = useState(null);
   const [formData, setFormData] = useState(null);
 
+  const loadProfile = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await technicianApi.me();
+      const mapped = {
+        name: data.user?.name || '',
+        email: data.user?.email || '',
+        phone: data.user?.phone || '',
+        role: 'Technician',
+        location: data.user?.location || '',
+        service: data.service?.name || 'Plumber',
+        experience: String(data.experience ?? 0),
+        rate: String(data.hourlyRate ?? 0),
+        rating: String(data.rating ?? 0),
+        availability: data.availability ? 'Available' : 'Unavailable',
+        bio: data.bio || ''
+      };
+      setProfile(mapped);
+      setFormData(mapped);
+    } catch {
+      setError('Unable to load data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const tech = await technicianApi.me();
-        const mapped = mapProfile(tech);
-        setProfile(mapped);
-        setFormData(mapped);
-      } catch {
-        setError('Unable to load data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+    loadProfile();
   }, []);
 
   const handleInputChange = (e) => {
@@ -53,25 +51,21 @@ function TechnicianProfile() {
 
   const handleSave = async () => {
     setSaveError('');
-    setSaving(true);
     try {
-      const updated = await technicianApi.updateMe({
+      await technicianApi.updateMe({
         name: formData.name,
         phone: formData.phone,
         location: formData.location,
         service: formData.service,
         experience: Number(formData.experience) || 0,
         hourlyRate: Number(formData.rate) || 0,
-        availability: formData.availability === 'Available'
+        availability: formData.availability === 'Available',
+        bio: formData.bio
       });
-      const mapped = mapProfile(updated);
-      setProfile(mapped);
-      setFormData(mapped);
+      await loadProfile();
       setIsEditing(false);
     } catch (err) {
       setSaveError(err.message || 'Something went wrong.');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -90,7 +84,7 @@ function TechnicianProfile() {
     return <p className="text-slate-400">Loading...</p>;
   }
 
-  if (error || !profile || !formData) {
+  if (error || !profile) {
     return <p className="text-slate-400">{error || 'Something went wrong.'}</p>;
   }
 
@@ -109,12 +103,12 @@ function TechnicianProfile() {
           <div className="luxury-card-border">
             <div className="glass-card rounded-[1.4rem] p-8 text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#1D4ED8] via-[#60A5FA] to-[#1D4ED8] opacity-80"></div>
-
+              
               <div className="w-24 h-24 mx-auto rounded-full bg-[#05070E] border-2 border-[#E5C07B]/30 flex items-center justify-center mb-6 relative group">
                 <div className="absolute inset-0 rounded-full border border-[#E5C07B] opacity-0 scale-150 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
                 <span className="text-3xl relative z-10">👨‍🔧</span>
               </div>
-
+              
               <h2 className="text-2xl font-serifHeading text-white font-bold mb-1">{profile.name}</h2>
               <p className="text-sm text-[#E5C07B] font-bold tracking-widest uppercase mb-6">{profile.role}</p>
 
@@ -141,19 +135,12 @@ function TechnicianProfile() {
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mr-3"></span>
                 Account
               </h3>
-
+              
               <div className="space-y-4">
-                <button
-                  type="button"
-                  disabled
-                  title="Password change is not available yet"
-                  className="w-full py-3 rounded-xl border border-white/10 bg-white/[0.02] text-center text-sm font-bold tracking-wider uppercase text-slate-500 cursor-not-allowed opacity-60"
-                >
+                <button className="w-full py-3 rounded-xl border border-[#E5C07B]/30 bg-[#E5C07B]/5 text-center text-sm font-bold tracking-wider uppercase text-[#E5C07B] hover:bg-[#E5C07B]/10 transition-all">
                   Change Password
                 </button>
-                <p className="text-[10px] text-slate-500 text-center -mt-2">Not available in this version</p>
-                <button
-                  type="button"
+                <button 
                   onClick={handleLogout}
                   className="w-full py-3 rounded-xl border border-red-500/30 bg-red-500/5 text-center text-sm font-bold tracking-wider uppercase text-red-500 hover:bg-red-500/10 transition-all"
                 >
@@ -167,14 +154,14 @@ function TechnicianProfile() {
         <div className="lg:col-span-2">
           <div className="luxury-card-border h-full">
             <div className="glass-card rounded-[1.4rem] p-8 md:p-10 h-full">
+              
               <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-6">
                 <h3 className="text-xl font-serifHeading text-white font-bold flex items-center">
                   <span className="w-2 h-2 rounded-full bg-[#E5C07B] mr-3"></span>
                   Professional Information
                 </h3>
                 {!isEditing && (
-                  <button
-                    type="button"
+                  <button 
                     onClick={() => setIsEditing(true)}
                     className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-xs font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
                   >
@@ -190,8 +177,8 @@ function TechnicianProfile() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Full Name</label>
-                      <input
-                        type="text"
+                      <input 
+                        type="text" 
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
@@ -200,8 +187,8 @@ function TechnicianProfile() {
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Phone Number</label>
-                      <input
-                        type="text"
+                      <input 
+                        type="text" 
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
@@ -210,8 +197,8 @@ function TechnicianProfile() {
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Location</label>
-                      <input
-                        type="text"
+                      <input 
+                        type="text" 
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
@@ -233,8 +220,8 @@ function TechnicianProfile() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Experience (Years)</label>
-                      <input
+                      <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Experience</label>
+                      <input 
                         type="number"
                         min="0"
                         name="experience"
@@ -245,7 +232,7 @@ function TechnicianProfile() {
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Hourly Rate ($)</label>
-                      <input
+                      <input 
                         type="number"
                         min="0"
                         name="rate"
@@ -263,22 +250,19 @@ function TechnicianProfile() {
                         className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B] transition-all appearance-none [&>option]:bg-[#05070E]"
                       >
                         <option value="Available">Available</option>
-                        <option value="Busy">Busy</option>
+                        <option value="Unavailable">Unavailable</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="pt-8 flex gap-4 border-t border-white/5">
-                    <button
-                      type="button"
-                      disabled={saving}
+                    <button 
                       onClick={handleSave}
-                      className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right disabled:opacity-60"
+                      className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-[0.1em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all diamond-glow bg-[length:200%_auto] hover:bg-right"
                     >
-                      {saving ? 'Saving...' : 'Save Changes'}
+                      Save Changes
                     </button>
-                    <button
-                      type="button"
+                    <button 
                       onClick={handleCancel}
                       className="px-8 py-3 rounded-xl border border-white/20 bg-transparent text-white text-sm font-bold tracking-[0.1em] uppercase hover:bg-white/5 transition-all"
                     >
@@ -312,9 +296,11 @@ function TechnicianProfile() {
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
