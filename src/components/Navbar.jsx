@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,12 +45,12 @@ function Navbar() {
 
         {/*  Right Actions: Login & Get Started  */}
         <div className="hidden sm:flex items-center gap-6">
-          <a href="#login" className="text-sm font-medium tracking-wide text-slate-300 hover:text-white transition-colors px-3 py-2">
+          <Link to="/login" className="text-sm font-medium tracking-wide text-slate-300 hover:text-white transition-colors px-3 py-2">
             Login
-          </a>
+          </Link>
           
           {/*  Premium Get Started Button  */}
-          <a href="#cta" className="relative group p-[1px] rounded-full overflow-hidden inline-flex">
+          <Link to="/register" className="relative group p-[1px] rounded-full overflow-hidden inline-flex">
             <span className="absolute inset-0 bg-gradient-to-r from-[#E5C07B] via-[#FFFFFF] to-[#C99E47] rounded-full animate-pulse opacity-80 group-hover:opacity-100 transition-opacity"></span>
             <span className="relative px-6 py-2.5 rounded-full bg-[#0B0F1C] text-slate-100 text-sm font-semibold tracking-wide flex items-center gap-2 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#13192B] group-hover:to-[#1B233D] group-hover:text-[#FBE8B5] shadow-lg shadow-black/40">
               <span className="">Get Started</span>
@@ -57,7 +58,7 @@ function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
             </span>
-          </a>
+          </Link>
         </div>
 
         {/*  Mobile Hamburger Button  */}
@@ -75,8 +76,8 @@ function Navbar() {
         <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 text-base font-medium text-slate-200 hover:text-[#FBE8B5] border-b border-white/5">Services</a>
         <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 text-base font-medium text-slate-200 hover:text-[#FBE8B5] border-b border-white/5">About</a>
         <div className="pt-4 flex flex-col gap-3">
-          <a href="#login" className="text-center py-2.5 rounded-xl border border-white/10 text-sm font-medium text-slate-200">Login</a>
-          <a href="#cta" className="text-center py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-wider shadow-lg">Get Started</a>
+          <Link to="/login" className="text-center py-2.5 rounded-xl border border-white/10 text-sm font-medium text-slate-200">Login</Link>
+          <Link to="/register" className="text-center py-3 rounded-xl bg-gradient-to-r from-[#C99E47] via-[#FBE8B5] to-[#C99E47] text-[#090D18] text-sm font-bold tracking-wider shadow-lg">Get Started</Link>
         </div>
       </div>
     </header>

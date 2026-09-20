@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function CTASection() {
   return (
@@ -40,7 +41,7 @@ function CTASection() {
 
               {/*  Primary Button verbatim: Book Your Service  */}
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#book" className="relative group p-[1px] rounded-2xl overflow-hidden shadow-2xl shadow-[#E5C07B]/30 transform hover:-translate-y-0.5 transition-all">
+                <Link to="/register" className="relative group p-[1px] rounded-2xl overflow-hidden shadow-2xl shadow-[#E5C07B]/30 transform hover:-translate-y-0.5 transition-all">
                   <span className="absolute inset-0 bg-gradient-to-r from-[#FBE8B5] via-[#E5C07B] to-[#C99E47] group-hover:scale-105 transition-transform duration-300"></span>
                   <span className="relative px-10 py-4 rounded-2xl bg-gradient-to-r from-[#172038] via-[#0E1528] to-[#172038] flex items-center justify-center gap-3 text-white font-bold tracking-wider text-base transition-colors group-hover:bg-opacity-80">
                     <span className="text-[#FBE8B5] group-hover:text-white transition-colors">Book Your Service</span>
@@ -48,7 +49,7 @@ function CTASection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>
                   </span>
-                </a>
+                </Link>
               </div>
 
               {/*  Reassurance Microcopy  */}

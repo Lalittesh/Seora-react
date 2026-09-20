@@ -1,32 +1,55 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ServicesCarousel from './components/ServicesCarousel';
-import CTASection from './components/CTASection';
-import AboutSection from './components/AboutSection';
-import Footer from './components/Footer';
+import LandingPage from './pages/LandingPage';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+
+// Customer Pages
+import CustomerLayout from './layouts/CustomerLayout';
+import CustomerDashboard from './pages/customer/CustomerDashboard';
+import CustomerServices from './pages/customer/CustomerServices';
+import CustomerTechnicians from './pages/customer/CustomerTechnicians';
+import CustomerBooking from './pages/customer/CustomerBooking';
+import CustomerOrders from './pages/customer/CustomerOrders';
+import CustomerProfile from './pages/customer/CustomerProfile';
+
+// Technician Pages
+import TechnicianLayout from './layouts/TechnicianLayout';
+import TechnicianDashboard from './pages/technician/TechnicianDashboard';
+import TechnicianBookings from './pages/technician/TechnicianBookings';
+import TechnicianJobs from './pages/technician/TechnicianJobs';
+import TechnicianProfile from './pages/technician/TechnicianProfile';
 
 function App() {
   return (
-    <>
-      {/*  AMBIENT BACKGROUND GLOWS  */}
-      <div className="fixed top-0 left-1/4 w-[600px] h-[600px] radial-glow-gold pointer-events-none -z-10 blur-3xl opacity-60"></div>
-      <div className="fixed top-1/3 right-10 w-[700px] h-[700px] radial-glow-sapphire pointer-events-none -z-10 blur-3xl opacity-50"></div>
-      <div className="fixed bottom-10 left-1/3 w-[650px] h-[650px] radial-glow-gold pointer-events-none -z-10 blur-3xl opacity-40"></div>
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        {/* Customer Routes */}
+        <Route path="/customer" element={<CustomerLayout />}>
+          <Route index element={<CustomerDashboard />} />
+          <Route path="services" element={<CustomerServices />} />
+          <Route path="technicians" element={<CustomerTechnicians />} />
+          <Route path="booking" element={<CustomerBooking />} />
+          <Route path="orders" element={<CustomerOrders />} />
+          <Route path="profile" element={<CustomerProfile />} />
+        </Route>
 
-      <Navbar />
-      
-      <main>
-        <Hero />
-        <ServicesCarousel />
-        <CTASection />
-        <AboutSection />
-      </main>
-
-      <Footer />
-    </>
+        {/* Technician Routes */}
+        <Route path="/technician" element={<TechnicianLayout />}>
+          <Route index element={<TechnicianDashboard />} />
+          <Route path="bookings" element={<TechnicianBookings />} />
+          <Route path="jobs" element={<TechnicianJobs />} />
+          <Route path="profile" element={<TechnicianProfile />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
