@@ -15,7 +15,6 @@ function CustomerBooking() {
   const [time, setTime] = useState('');
   const [hours, setHours] = useState(1);
   const [address, setAddress] = useState('');
-  const [notes, setNotes] = useState('');
   
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [confirmedTotal, setConfirmedTotal] = useState(0);
@@ -183,17 +182,6 @@ function CustomerBooking() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Additional Notes</label>
-                <textarea 
-                  rows="3"
-                  placeholder="Any specific requests..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-[#090D18]/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#E5C07B] focus:ring-1 focus:ring-[#E5C07B]/50 transition-all placeholder:text-slate-600 resize-none" 
-                ></textarea>
-              </div>
-              
               <button 
                 type="submit"
                 disabled={submitting}
@@ -242,20 +230,18 @@ function CustomerBooking() {
 
               <div className="space-y-2 mb-6 border-b border-white/10 pb-6 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Subtotal ({hours} {hours === 1 ? 'hr' : 'hrs'})</span>
+                  <span className="text-slate-400">Rate × hours ({hours} {hours === 1 ? 'hr' : 'hrs'})</span>
                   <span className="text-white">${estimatedTotal}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Service Fee</span>
-                  <span className="text-white">$15</span>
                 </div>
               </div>
 
               <div className="flex justify-between items-center mb-2">
                 <span className="text-slate-300 font-bold uppercase tracking-wider text-xs">Estimated Total</span>
-                <span className="text-2xl font-display gold-gradient-text font-bold">${estimatedTotal + 15}</span>
+                <span className="text-2xl font-display gold-gradient-text font-bold">${estimatedTotal}</span>
               </div>
-              <p className="text-[10px] text-slate-500 text-center mt-4">Final total is calculated by the server when you confirm.</p>
+              <p className="text-[10px] text-slate-500 text-center mt-4">
+                Total is hourly rate × hours. The confirmed amount is calculated by the server when you submit.
+              </p>
             </div>
           </div>
         </div>

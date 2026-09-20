@@ -119,7 +119,7 @@ function CustomerDashboard() {
           <div className="glass-card rounded-[1.4rem] overflow-hidden">
             {loading ? (
               <div className="p-8 text-center text-slate-400 text-sm">Loading...</div>
-            ) : (
+            ) : recentBookings.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
@@ -156,8 +156,7 @@ function CustomerDashboard() {
                   </tbody>
                 </table>
               </div>
-            )}
-            {!loading && recentBookings.length === 0 && (
+            ) : (
               <div className="p-8 text-center text-slate-400 text-sm">
                 No recent bookings found.
               </div>

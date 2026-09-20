@@ -145,10 +145,13 @@ function TechnicianProfile() {
               <div className="space-y-4">
                 <button
                   type="button"
-                  className="w-full py-3 rounded-xl border border-[#E5C07B]/30 bg-[#E5C07B]/5 text-center text-sm font-bold tracking-wider uppercase text-[#E5C07B] hover:bg-[#E5C07B]/10 transition-all"
+                  disabled
+                  title="Password change is not available yet"
+                  className="w-full py-3 rounded-xl border border-white/10 bg-white/[0.02] text-center text-sm font-bold tracking-wider uppercase text-slate-500 cursor-not-allowed opacity-60"
                 >
                   Change Password
                 </button>
+                <p className="text-[10px] text-slate-500 text-center -mt-2">Not available in this version</p>
                 <button
                   type="button"
                   onClick={handleLogout}

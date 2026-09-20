@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { capitalizeServiceName, mapTechnicianCard, technicianApi } from '../../services/api';
 
@@ -33,8 +33,6 @@ function CustomerTechnicians() {
     ? `Available ${selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}s` 
     : 'Our Master Technicians';
 
-  const filteredTechnicians = useMemo(() => technicians, [technicians]);
-
   if (loading) {
     return <p className="text-slate-400">Loading...</p>;
   }
@@ -54,7 +52,7 @@ function CustomerTechnicians() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
-        {filteredTechnicians.map((tech) => (
+        {technicians.map((tech) => (
           <div key={tech.id} className="luxury-card-border group">
             <div className="glass-card rounded-[1.4rem] p-6 flex flex-col h-full transition-all group-hover:bg-white/[0.04]">
               <div className="flex items-start justify-between mb-4">
@@ -109,7 +107,7 @@ function CustomerTechnicians() {
           </div>
         ))}
 
-        {filteredTechnicians.length === 0 && (
+        {technicians.length === 0 && (
           <div className="col-span-full py-12 text-center text-slate-400">
             No technicians available.
           </div>

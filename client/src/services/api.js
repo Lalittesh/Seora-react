@@ -1,8 +1,16 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
 
 const getToken = () => localStorage.getItem('seora_token');
 
 const request = async (path, { method = 'GET', body, auth = false } = {}) => {
+  if (!API_URL) {
+    const err = new Error('API URL is not configured. Set VITE_API_URL in your environment.');
+    err.status = 0;
+    throw err;
+  }
+
   const headers = { 'Content-Type': 'application/json' };
 
   if (auth) {

@@ -69,7 +69,7 @@ function Login() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Password</label>
-                <a href="#" className="text-xs text-[#E5C07B] hover:text-[#FBE8B5] transition-colors">Forgot password?</a>
+                <span className="text-xs text-slate-500 cursor-not-allowed" title="Not available in this version">Forgot password?</span>
               </div>
               <input 
                 type="password" 

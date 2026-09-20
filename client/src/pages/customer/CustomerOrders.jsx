@@ -218,7 +218,7 @@ function CustomerOrders() {
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-slate-300 font-bold uppercase tracking-wider text-sm">Total Paid</span>
+                  <span className="text-slate-300 font-bold uppercase tracking-wider text-sm">Total Amount</span>
                   <span className="text-3xl font-display gold-gradient-text font-bold">${selectedOrder.amount}</span>
                 </div>
 

@@ -75,9 +75,9 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
         <p className="">© 2026 Seora. All rights reserved.</p>
         <div className="flex items-center gap-6">
-          <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-300 transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-slate-300 transition-colors">Service Warranty</a>
+          <span className="text-slate-500 cursor-default" title="Not available in this version">Privacy Policy</span>
+          <span className="text-slate-500 cursor-default" title="Not available in this version">Terms of Service</span>
+          <span className="text-slate-500 cursor-default" title="Not available in this version">Service Warranty</span>
         </div>
       </div>
 
