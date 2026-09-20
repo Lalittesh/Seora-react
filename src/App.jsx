@@ -96,7 +96,7 @@ function App() {
       
       {/*  Generated Hero Campaign Image Background  */}
       <div className="absolute inset-0 z-0">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU7xAD1i-7A1hXTm8lp2_f73ngDw-FHm-p7Js_GDlFI_WuDLEtOO5OF8W6wXn4uKS--bDYl1xzmJbTMELHj4QV-TTPqqxMDFFV9YdrGhnssjjOhqXSLk955SrVAmRck83_dS5W77HYQOACdjZ0FNYRjKGh_U6exM5DPHAIlpHrgFcujjwxJ-0kMmmtF26nsDnxctDI7dwsgI_pG9VjJ58MDYVhWRFbeL5ndL0KNF1bvOs9W2cyjQRrgGEXZk0qu4CU16L1c-mikLYUpA8" alt="Smooth golden wave curves on a luxurious dark background" className="w-full h-full object-cover object-center transform scale-105 duration-1000 ease-out" />
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU7xAD1i-7A1hXTm8lp2_f73ngDw-FHm-p7Js_GDlFI_WuDLEtOO5OF8W6wXn4uKS--bDYl1xzmJbTMELHj4QV-TTPqqxMDFFV9YdrGhnssjjOhqXSLk955SrVAmRck83_dS5W77HYQOACdjZ0FNYRjKGh_U6exM5DPHAIlpHrgFcujjwxJ-0kMmmtF26nsDnxctDI7dwsgI_pG9VjJ58MDYVhWRFbeL5ndL0KNF1bvOs9W2cyjQRrgGEXZk0qu4CU16L1c-mikLYUpA8=s0" alt="Smooth golden wave curves on a luxurious dark background" className="w-full h-full object-cover object-center transform scale-105 duration-1000 ease-out" />
         {/*  Cinematic Dark Jewelry-Inspired Gradient Overlays for Extreme Contrast & Readability  */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070E] via-transparent to-[#05070E]/70"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#05070E]/80 via-transparent to-transparent"></div>
