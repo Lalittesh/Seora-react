@@ -25,6 +25,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use('/api/auth', require('./routes/authRoutes'));
+
 app.use(notFound);
 app.use(errorHandler);
 
