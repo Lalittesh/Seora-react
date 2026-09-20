@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Cinzel', serif;
+  --font-serifHeading: '"Playfair Display"', serif;
+  --font-sans: '"Plus Jakarta Sans"', sans-serif;
+  --color-seora-midnight: #05070E;
+  --color-seora-obsidian: #090D18;
+  --color-seora-charcoal: #111728;
+  --color-seora-surface: rgba(16, 23, 42, 0.75);
+  --color-seora-gold: #E5C07B;
+  --color-seora-goldLight: #FBE8B5;
+  --color-seora-goldDark: #C99E47;
+  --color-seora-sapphire: #1D4ED8;
+  --color-seora-emerald: #059669;
+  --color-seora-lavender: #A78BFA;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #05070E;
+}
+::-webkit-scrollbar-thumb {
+  background: #252D42;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C99E47;
+}
+
+/* Luxury Diamond & Gold Shimmer Accents */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFFDF8 10%, #F5D78F 40%, #E0B45C 70%, #9C7228 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.diamond-glow {
+  box-shadow: 0 0 35px -5px rgba(229, 192, 123, 0.35);
+}
+.luxury-card-border {
+  position: relative;
+  background: linear-gradient(180deg, rgba(229, 192, 123, 0.25) 0%, rgba(255, 255, 255, 0.05) 40%, rgba(167, 139, 250, 0.15) 100%);
+  padding: 1px;
+  border-radius: 1.5rem;
+}
+
+/* Continuous Infinite Carousel Keyframes (No Hover Pause) */
+@keyframes infiniteScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.carousel-track {
+  display: flex;
+  width: max-content;
+  animation: infiniteScroll 30s linear infinite;
+  will-change: transform;
+}
+
+/* Enforce strict continuous movement: never pause on hover */
+.carousel-container:hover .carousel-track,
+.carousel-track:hover,
+.carousel-card:hover {
+  animation-play-state: running !important;
+}
+
+/* Glassmorphism Classes */
+.glass-nav {
+  background: rgba(7, 10, 20, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(229, 192, 123, 0.18);
+}
+.glass-card {
+  background: rgba(14, 20, 37, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Ambient Glow orbs */
+.radial-glow-gold {
+  background: radial-gradient(circle at center, rgba(229, 192, 123, 0.12) 0%, transparent 70%);
+}
+.radial-glow-sapphire {
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+}
