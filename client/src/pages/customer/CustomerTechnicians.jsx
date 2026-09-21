@@ -29,8 +29,8 @@ function CustomerTechnicians() {
     load();
   }, [selectedService]);
 
-  const displayTitle = selectedService 
-    ? `Available ${selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}s` 
+  const displayTitle = selectedService
+    ? `Available ${capitalizeServiceName(selectedService)}s`
     : 'Our Master Technicians';
 
   if (loading) {

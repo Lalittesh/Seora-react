@@ -1,6 +1,7 @@
 const Technician = require('../models/Technician');
 const User = require('../models/User');
 const Service = require('../models/Service');
+const { findServiceByName } = require('../utils/serviceLookup');
 
 const getTechnicians = async (req, res) => {
   try {
@@ -8,7 +9,7 @@ const getTechnicians = async (req, res) => {
     
     let query = {};
     if (service) {
-      const serviceObj = await Service.findOne({ name: service });
+      const serviceObj = await findServiceByName(service);
       if (serviceObj) {
         query.service = serviceObj._id;
       } else {
@@ -68,7 +69,7 @@ const updateMyProfile = async (req, res) => {
     await user.save();
 
     if (service) {
-      const serviceObj = await Service.findOne({ name: service });
+      const serviceObj = await findServiceByName(service);
       if (!serviceObj) {
         return res.status(400).json({ message: 'Invalid service' });
       }
