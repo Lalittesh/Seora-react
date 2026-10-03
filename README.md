@@ -1,10 +1,10 @@
 # 🔧 Seora
 
-### Your Home Service, Just a Booking Away! 🏠✨
+### Your Trusted Local Service Partner! 🏠✨
 
 **Seora** is a MERN stack service-booking platform that connects customers with skilled technicians for everyday home services.
 
-🌐 **Live Demo:**  https://seora.onrender.com
+🌐 **Live Demo:** [Seora](https://seora.onrender.com)
 
 
 ### 🏠 Landing Page
@@ -160,11 +160,11 @@ npm run dev
 
 ## 👨‍💻 Author
 
-**YOUR_NAME**
+**Lalittesh Kumar**
 
-🔗 GitHub: https://github.com/Lalittesh
+🔗 GitHub: [Lalittesh](https://github.com/Lalittesh)
 
-🔗 LinkedIn: https://www.linkedin.com/in/lalitteshkumar/
+🔗 LinkedIn: [Lalittesh Kumar](https://www.linkedin.com/in/lalitteshkumar/)
 
 ---
 
