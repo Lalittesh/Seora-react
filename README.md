@@ -13,7 +13,6 @@
 
 <img width="2880" height="1316" alt="image" src="https://github.com/user-attachments/assets/1ddc7976-ca2b-4bdb-889a-e393327318af" />
 
-
 ### 🔐 Login / Register
 
 <img width="2866" height="1328" alt="image" src="https://github.com/user-attachments/assets/0ffb91bf-9b7f-4cbd-81cc-daebf55479d0" />
@@ -22,23 +21,26 @@
 
 ### 👤 Customer Dashboard
 
-<!-- Paste screenshot here -->
+<img width="2880" height="1362" alt="image" src="https://github.com/user-attachments/assets/cd8781f8-249a-4408-ae20-cc175e61d3ad" />
 
 ### 🛠️ Services & Technicians
 
-<!-- Paste screenshot here -->
+<img width="2880" height="1312" alt="image" src="https://github.com/user-attachments/assets/fbd93c10-ecad-405a-8ede-26ec7734d4ed" />
+
+<img width="2880" height="1294" alt="image" src="https://github.com/user-attachments/assets/cf949cf5-dddd-4dde-9b21-0f1070bcf430" />
 
 ### 📅 Booking
 
-<!-- Paste screenshot here -->
+<img width="2876" height="1328" alt="image" src="https://github.com/user-attachments/assets/a31ccb80-7c4e-46a4-aca3-3cb26dc200fb" />
 
 ### 📋 Orders
 
-<!-- Paste screenshot here -->
+<img width="2880" height="1336" alt="image" src="https://github.com/user-attachments/assets/cfa44d1a-e458-4eb0-890b-42cafb209c6d" />
+
 
 ### 👨‍🔧 Technician Dashboard
 
-<!-- Paste screenshot here -->
+<img width="2880" height="1326" alt="image" src="https://github.com/user-attachments/assets/d77d8b77-3a96-4b8e-a795-06c0143a6ca9" />
 
 ---
 
@@ -160,9 +162,9 @@ npm run dev
 
 **YOUR_NAME**
 
-🔗 GitHub: [YOUR_GITHUB_PROFILE](YOUR_GITHUB_PROFILE)
+🔗 GitHub: https://github.com/Lalittesh
 
-🔗 LinkedIn: [YOUR_LINKEDIN_PROFILE](YOUR_LINKEDIN_PROFILE)
+🔗 LinkedIn: https://www.linkedin.com/in/lalitteshkumar/
 
 ---
 
